@@ -1,24 +1,17 @@
-const express = require('express')
-const dotenv = require('dotenv').config()
-const { errorHandler } = require('./middleware/errorMiddleware')
-const port = process.env.PORT || 5000
-const connectDB = require('./config/db')
-
-// * server connecting
+const express=require('express')
+const dotenv =require('dotenv').config()
+const port= process.env.PORT ||5000
+const { errorHandler } = require('./middleware/errorMiddleware');
+const connectDB = require('./config/db');
 connectDB();
-
-// * express initializing
-const app = express()
-
-//* json middleware
+const app= express()
 app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({extended: false}))
 
-// ! routes
-app.use('/api/goals', require('./routes/goalRoutes'))
-app.use('/api/users', require('./routes/userRoutes'))
+app.use('/api/users',require('./routes/userRoutes'));
+app.use('/api/admin',require('./routes/adminRoutes'));
+app.use('/api/goals', require('./routes/goalRoutes'));
 
-// ! middleware
-app.use(errorHandler)
+app.use(errorHandler);
 
-app.listen(port, () => console.log(`server running on http://localhost:${port}`))
+app.listen(port,()=>console.log(`Server started on port ${port}`))

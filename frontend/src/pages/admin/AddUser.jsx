@@ -4,11 +4,11 @@ import { FaUser } from 'react-icons/fa'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { register, reset } from '../features/auth/authSlice'
-import Spinner from '../app/components/Spinner'
+import { addUser, reset } from '../../features/adminAuth/adminAuthSlice'
+import Spinner from '../../app/components/Spinner'
 
 
-function Register() {
+function AddUser() {
 
   const [formData, setFormData] = useState({
     name: '',
@@ -21,21 +21,25 @@ function Register() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const { user, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.auth
+  const { admin, isLoading, isError, isSuccess, message ,isUserAdded} = useSelector(
+    (state) => state.adminAuth
   )
+  useEffect(() => {
+ 
+    dispatch(reset());
+  }, [dispatch]);
 
   useEffect(() => {
     if (isError) {
       toast.error(message)
     }
 
-    if (isSuccess || user) {
-      navigate('/')
+    if (isUserAdded ||!admin) {
+      navigate('/admin/login')
     }
 
     dispatch(reset())
-  }, [user, isError, isSuccess, message, navigate, dispatch])
+  }, [admin, isError,isUserAdded, isSuccess, message, navigate, dispatch])
 
 
   const onChange = (e) => {
@@ -59,7 +63,8 @@ function Register() {
         password,
       }
 
-      dispatch(register(userData))
+      dispatch(addUser(userData))
+
     }
   }
 
@@ -68,10 +73,10 @@ function Register() {
   }
   return (
     <>
-     <div className='login-card'>
+     <div className='adduser-card'>
       <section className='heading'>
         <h1>
-          <FaUser /> Register
+          <FaUser /> Add New User
         </h1>
         <p>Please create an account</p>
       </section>
@@ -136,4 +141,4 @@ function Register() {
   )
 }
 
-export default Register
+export default AddUser
